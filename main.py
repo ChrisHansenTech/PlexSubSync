@@ -47,7 +47,7 @@ def process_subsync(rating_key: str):
     try:
         result = subprocess.run(
             [
-                "/app/subsync/bin/subsync",
+                "subsync",
                 "--cli",
                 "sync",
                 "--ref", ref_file,
