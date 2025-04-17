@@ -9,6 +9,12 @@ HOME_ASSISTANT_WEBHOOK_URL = os.getenv("HOME_ASSISTANT_WEBHOOK_URL")
 PLEX_LIBRARY_DIR = "/media"
 
 # Notification message templates
+# Notification message templates
 NOTIFICATION_MESSAGE_TEMPLATE = "SubSync finished for: {}"
 START_MESSAGE_TEMPLATE = "SubSync started for: {}"
+# failure template for failure notifications
 FAILURE_MESSAGE_TEMPLATE = "SubSync failed for: {}"
+
+# Default language codes (ISO-639-1); can be overridden via environment variables
+DEFAULT_AUDIO_LANG = os.getenv("DEFAULT_AUDIO_LANG", "en")
+DEFAULT_SUB_LANG = os.getenv("DEFAULT_SUB_LANG", "en")

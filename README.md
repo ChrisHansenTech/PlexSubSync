@@ -51,6 +51,8 @@ Set the following environment variables or configure them in a `.env` file:
 | `PLEX_TOKEN`               | Your Plex access token                                               |
 | `PLEX_URL`                 | Base URL of your Plex server (e.g., `http://192.168.1.10:32400`)      |
 | `HOME_ASSISTANT_WEBHOOK_URL` | (Optional) Home Assistant webhook URL to notify status             |
+| `DEFAULT_AUDIO_LANG`         | (Optional) Default ISO-639-1 audio language code if not provided (default: "en") |
+| `DEFAULT_SUB_LANG`           | (Optional) Default ISO-639-1 subtitle language code if not provided (default: "en") |
 
 By default, the service expects your Plex media library to be mounted at `/media`. If your files are located elsewhere, update `PLEX_LIBRARY_DIR` in `plex_subsync/config.py`.
 
@@ -68,12 +70,12 @@ Content-Type: application/json
 ```json
 {
   "media_id": "123456",      # Plex metadata ID
-  "audio_lang": "en",        # ISO-639-1 audio language code
-  "sub_lang": "es"           # ISO-639-1 subtitle language code
+  "audio_lang": "en",        # ISO-639-1 audio language code (optional; default from DEFAULT_AUDIO_LANG env var, fallback: "en")
+  "sub_lang": "es"           # ISO-639-1 subtitle language code (optional; default from DEFAULT_SUB_LANG env var, fallback: "en")
 }
 ```
 
-The `media_id` corresponds to the Plex metadata ID of the media you want to sync. Provide both audio and subtitle language codes so that PlexSubSync can match the correct audio track and subtitle file.
+The `media_id` corresponds to the Plex metadata ID of the media you want to sync. Audio and subtitle language codes are optional; if omitted, defaults are taken from the `DEFAULT_AUDIO_LANG` and `DEFAULT_SUB_LANG` environment variables (fallback: "en"). These codes help PlexSubSync match the correct audio track and subtitle file.
 
 ## Example Workflow
 

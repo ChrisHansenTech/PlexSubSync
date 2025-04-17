@@ -12,12 +12,17 @@ from .config import (
     START_MESSAGE_TEMPLATE,
     NOTIFICATION_MESSAGE_TEMPLATE,
     FAILURE_MESSAGE_TEMPLATE,
+    DEFAULT_AUDIO_LANG,
+    DEFAULT_SUB_LANG,
 )
 
 def process_subsync(data) -> None:
     """
     Retrieve video file path from Plex, find matching subtitle, and run subsync.
     """
+    # determine language codes (request overrides environment variable, fallback to 'en')
+    audio_lang = data.audio_lang or DEFAULT_AUDIO_LANG
+    sub_lang = data.sub_lang or DEFAULT_SUB_LANG
     video_file = get_plex_file_path(data.media_id)
     if not video_file:
         print("Error: Unable to fetch file path from Plex.")
@@ -27,7 +32,7 @@ def process_subsync(data) -> None:
     title = get_plex_media_title(data.media_id)
     if not title:
         title = os.path.splitext(os.path.basename(video_file))[0]
-    srt_file = find_matching_srt(video_file, data.sub_lang)
+    srt_file = find_matching_srt(video_file, sub_lang)
     if not srt_file:
         print("Error: No matching SRT file found.")
         return
@@ -44,9 +49,9 @@ def process_subsync(data) -> None:
                 "--cli",
                 "sync",
                 "--ref", ref_file,
-                "--ref-lang", data.audio_lang,
+                "--ref-lang", audio_lang,
                 "--sub", srt_file,
-                "--sub-lang", data.sub_lang,
+                "--sub-lang", sub_lang,
                 "--out", srt_file,
                 "--overwrite",
                 "--effort", "1"
