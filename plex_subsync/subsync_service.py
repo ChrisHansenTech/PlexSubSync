@@ -34,8 +34,12 @@ def process_subsync(data) -> None:
         title = os.path.splitext(os.path.basename(video_file))[0]
     srt_file = find_matching_srt(video_file, sub_lang)
     if not srt_file:
-        print("Error: No matching SRT file found.", flush=True)
-        send_home_assistant_notification(FAILURE_MESSAGE_TEMPLATE.format(title))
+        # notify failure with reason when subtitle is missing
+        reason = "No matching SRT file found"
+        print(f"Error: {reason}.", flush=True)
+        send_home_assistant_notification(
+            FAILURE_MESSAGE_TEMPLATE.format(title, reason)
+        )
         return
 
     ref_file = os.path.join(PLEX_LIBRARY_DIR, video_file)
@@ -64,5 +68,9 @@ def process_subsync(data) -> None:
         print(f"SubSync output: {result.stdout}", flush=True)
         send_home_assistant_notification(NOTIFICATION_MESSAGE_TEMPLATE.format(title))
     except subprocess.CalledProcessError as e:
-        print(f"SubSync error: {e.stderr}", flush=True)
-        send_home_assistant_notification(FAILURE_MESSAGE_TEMPLATE.format(title))
+        # include subprocess error details in notification
+        reason = e.stderr or str(e)
+        print(f"SubSync error: {reason}", flush=True)
+        send_home_assistant_notification(
+            FAILURE_MESSAGE_TEMPLATE.format(title, reason)
+        )

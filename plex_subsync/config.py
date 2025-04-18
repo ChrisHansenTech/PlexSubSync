@@ -12,8 +12,8 @@ PLEX_LIBRARY_DIR = "/media"
 # Notification message templates
 NOTIFICATION_MESSAGE_TEMPLATE = "SubSync finished for: {}"
 START_MESSAGE_TEMPLATE = "SubSync started for: {}"
-# failure template for failure notifications
-FAILURE_MESSAGE_TEMPLATE = "SubSync failed for: {}"
+# failure template for failure notifications, includes error cause
+FAILURE_MESSAGE_TEMPLATE = "SubSync failed for: {}. Reason: {}"
 
 # Default language codes (ISO-639-1); can be overridden via environment variables
 DEFAULT_AUDIO_LANG = os.getenv("DEFAULT_AUDIO_LANG", "en")
