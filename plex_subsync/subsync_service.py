@@ -25,7 +25,7 @@ def process_subsync(data) -> None:
     sub_lang = data.sub_lang or DEFAULT_SUB_LANG
     video_file = get_plex_file_path(data.media_id)
     if not video_file:
-        print("Error: Unable to fetch file path from Plex.")
+        print("Error: Unable to fetch file path from Plex.", flush=True)
         return
     video_file = video_file.lstrip("/")
     # Retrieve media title for notifications
@@ -34,12 +34,13 @@ def process_subsync(data) -> None:
         title = os.path.splitext(os.path.basename(video_file))[0]
     srt_file = find_matching_srt(video_file, sub_lang)
     if not srt_file:
-        print("Error: No matching SRT file found.")
+        print("Error: No matching SRT file found.", flush=True)
+        send_home_assistant_notification(FAILURE_MESSAGE_TEMPLATE.format(title))
         return
 
     ref_file = os.path.join(PLEX_LIBRARY_DIR, video_file)
-    print(f"Reference video: {ref_file}")
-    print(f"Subtitle file: {srt_file}")
+    print(f"Reference video: {ref_file}", flush=True)
+    print(f"Subtitle file: {srt_file}", flush=True)
     send_home_assistant_notification(START_MESSAGE_TEMPLATE.format(title))
 
     try:
@@ -60,8 +61,8 @@ def process_subsync(data) -> None:
             capture_output=False,
             text=True
         )
-        print(f"SubSync output: {result.stdout}")
+        print(f"SubSync output: {result.stdout}", flush=True)
         send_home_assistant_notification(NOTIFICATION_MESSAGE_TEMPLATE.format(title))
     except subprocess.CalledProcessError as e:
-        print(f"SubSync error: {e.stderr}")
+        print(f"SubSync error: {e.stderr}", flush=True)
         send_home_assistant_notification(FAILURE_MESSAGE_TEMPLATE.format(title))

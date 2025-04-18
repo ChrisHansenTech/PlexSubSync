@@ -9,6 +9,6 @@ def send_home_assistant_notification(message: str):
     try:
         response = requests.post(HOME_ASSISTANT_WEBHOOK_URL, json={"message": message})
         response.raise_for_status()
-        print("Home Assistant webhook sent successfully.")
+        print("Home Assistant webhook sent successfully.", flush=True)
     except requests.RequestException as e:
-        print(f"Failed to send Home Assistant webhook: {e}")
+        print(f"Failed to send Home Assistant webhook: {e}", flush=True)

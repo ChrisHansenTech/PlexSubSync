@@ -16,7 +16,7 @@ def find_matching_srt(video_file: str, sub_lang: str) -> str | None:
     video_dir = os.path.join(PLEX_LIBRARY_DIR, os.path.dirname(video_file))
     video_name = os.path.splitext(os.path.basename(video_file))[0]
     pattern = os.path.join(video_dir, f"{video_name}*.srt")
-    print(f"Searching for subtitles in {video_dir} matching '{video_name}*.srt'")
+    print(f"Searching for subtitles in {video_dir} matching '{video_name}*.srt'", flush=True)
     all_candidates = glob.glob(pattern)
     candidates = [c for c in all_candidates if ".forced" not in os.path.basename(c).lower()]
 
@@ -30,7 +30,7 @@ def find_matching_srt(video_file: str, sub_lang: str) -> str | None:
     iso1 = sub_lang.lower()
     iso1_matches = [c for c in candidates if iso1 in parts(c)[1:]]
     if iso1_matches:
-        print(f"Found ISO-639-1 subtitle(s): {iso1_matches}")
+        print(f"Found ISO-639-1 subtitle(s): {iso1_matches}", flush=True)
         return iso1_matches[0]
 
     ISO_639_1_TO_2 = {
@@ -75,11 +75,11 @@ def find_matching_srt(video_file: str, sub_lang: str) -> str | None:
     if iso2:
         iso2_matches = [c for c in candidates if iso2 in parts(c)[1:]]
         if iso2_matches:
-            print(f"Found ISO-639-2 subtitle(s): {iso2_matches}")
+            print(f"Found ISO-639-2 subtitle(s): {iso2_matches}", flush=True)
             return iso2_matches[0]
 
     if len(candidates) == 1 and parts(candidates[0]) == [video_name]:
-        print(f"Error: Subtitle file '{candidates[0]}' has no language code.")
+        print(f"Error: Subtitle file '{candidates[0]}' has no language code.", flush=True)
         return None
 
     return None
