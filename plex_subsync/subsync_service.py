@@ -38,14 +38,20 @@ def process_subsync(data) -> None:
         reason = "No matching SRT file found"
         print(f"Error: {reason}.", flush=True)
         send_home_assistant_notification(
-            FAILURE_MESSAGE_TEMPLATE.format(title, reason)
+            FAILURE_MESSAGE_TEMPLATE.format(title, reason),
+            data.media_id,
+            data.entity_id
         )
         return
 
     ref_file = os.path.join(PLEX_LIBRARY_DIR, video_file)
     print(f"Reference video: {ref_file}", flush=True)
     print(f"Subtitle file: {srt_file}", flush=True)
-    send_home_assistant_notification(START_MESSAGE_TEMPLATE.format(title))
+    send_home_assistant_notification(
+        START_MESSAGE_TEMPLATE.format(title),
+        data.media_id,
+        data.entity_id
+    )
 
     try:
         result = subprocess.run(
@@ -66,11 +72,17 @@ def process_subsync(data) -> None:
             text=True
         )
         print(f"SubSync output: {result.stdout}", flush=True)
-        send_home_assistant_notification(NOTIFICATION_MESSAGE_TEMPLATE.format(title))
+        send_home_assistant_notification(
+            NOTIFICATION_MESSAGE_TEMPLATE.format(title),
+            data.media_id,
+            data.entity_id
+        )
     except subprocess.CalledProcessError as e:
         # include subprocess error details in notification
         reason = e.stderr or str(e)
         print(f"SubSync error: {reason}", flush=True)
         send_home_assistant_notification(
-            FAILURE_MESSAGE_TEMPLATE.format(title, reason)
+            FAILURE_MESSAGE_TEMPLATE.format(title, reason),
+            data.media_id,
+            data.entity_id
         )

@@ -7,6 +7,7 @@ app = FastAPI()
 
 class PlexRequest(BaseModel):
     media_id: str
+    entity_id: Optional[str] = None
     # ISO-639-1 audio language code; optional, defaults to environment or 'en'
     audio_lang: Optional[str] = None
     # ISO-639-1 subtitle language code; optional, defaults to environment or 'en'
