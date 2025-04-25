@@ -7,14 +7,7 @@ import os
 from .plex_api import get_plex_file_path, get_plex_media_title
 from .subtitle_finder import find_matching_srt
 from .notifier import send_home_assistant_notification
-from .config import (
-    PLEX_LIBRARY_DIR,
-    START_MESSAGE_TEMPLATE,
-    NOTIFICATION_MESSAGE_TEMPLATE,
-    FAILURE_MESSAGE_TEMPLATE,
-    DEFAULT_AUDIO_LANG,
-    DEFAULT_SUB_LANG,
-)
+from .config import *
 
 def process_subsync(data) -> None:
     """
@@ -38,9 +31,10 @@ def process_subsync(data) -> None:
         reason = "No matching SRT file found"
         print(f"Error: {reason}.", flush=True)
         send_home_assistant_notification(
+            STAGE_SYNC_FAILED,
             FAILURE_MESSAGE_TEMPLATE.format(title, reason),
             data.media_id,
-            data.entity_id
+            data.entity_id,
         )
         return
 
@@ -48,6 +42,7 @@ def process_subsync(data) -> None:
     print(f"Reference video: {ref_file}", flush=True)
     print(f"Subtitle file: {srt_file}", flush=True)
     send_home_assistant_notification(
+        STAGE_SYNC_START,
         START_MESSAGE_TEMPLATE.format(title),
         data.media_id,
         data.entity_id
@@ -73,6 +68,7 @@ def process_subsync(data) -> None:
         )
         print(f"SubSync output: {result.stdout}", flush=True)
         send_home_assistant_notification(
+            STAGE_SYNC_FINISHED,
             NOTIFICATION_MESSAGE_TEMPLATE.format(title),
             data.media_id,
             data.entity_id
@@ -82,6 +78,7 @@ def process_subsync(data) -> None:
         reason = e.stderr or str(e)
         print(f"SubSync error: {reason}", flush=True)
         send_home_assistant_notification(
+            STAGE_SYNC_FAILED,
             FAILURE_MESSAGE_TEMPLATE.format(title, reason),
             data.media_id,
             data.entity_id
