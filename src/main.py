@@ -6,7 +6,7 @@ from plex_subsync.subsync_service import process_subsync
 app = FastAPI()
 
 class PlexRequest(BaseModel):
-    media_id: str
+    media_id: int
     entity_id: Optional[str] = None
     # ISO-639-1 audio language code; optional, defaults to environment or 'en'
     audio_lang: Optional[str] = None

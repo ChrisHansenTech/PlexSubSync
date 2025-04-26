@@ -5,7 +5,7 @@ import requests
 from xml.etree import ElementTree as ET
 from .config import PLEX_URL, PLEX_TOKEN
 
-def get_plex_file_path(rating_key: str) -> str | None:
+def get_plex_file_path(rating_key: int) -> str | None:
     """Retrieve the file path for a given Plex metadata rating_key."""
     try:
         url = f"{PLEX_URL}/library/metadata/{rating_key}?X-Plex-Token={PLEX_TOKEN}"
@@ -20,7 +20,7 @@ def get_plex_file_path(rating_key: str) -> str | None:
         print(f"Error getting Plex metadata: {e}")
     return None
  
-def get_plex_media_title(rating_key: str) -> str | None:
+def get_plex_media_title(rating_key: int) -> str | None:
     """Retrieve the media title for a given Plex metadata rating_key."""
     try:
         url = f"{PLEX_URL}/library/metadata/{rating_key}?X-Plex-Token={PLEX_TOKEN}"
