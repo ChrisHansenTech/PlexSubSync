@@ -33,8 +33,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/chrishansentech/SubSyncForPlex:latest
-            ghcr.io/chrishansentech/SubSyncForPlex:${{ env.TAG }}
+            ghcr.io/chrishansentech/subsyncforplex:latest
+            ghcr.io/chrishansentech/subsyncforplex:${{ env.TAG }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
