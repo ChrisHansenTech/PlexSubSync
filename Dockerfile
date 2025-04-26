@@ -1,10 +1,10 @@
 FROM python:3.13
 
 # OCI metadata
-LABEL org.opencontainers.image.title="PlexSubSync"
+LABEL org.opencontainers.image.title="SubSyncForPlex"
 LABEL org.opencontainers.image.description="Dockerized subtitle synchronization service for Plex with FastAPI wrapper and sc0ty/subsync"
-LABEL org.opencontainers.image.url="https://github.com/ChrisHansenTech/PlexSubSync"
-LABEL org.opencontainers.image.source="https://github.com/ChrisHansenTech/PlexSubSync"
+LABEL org.opencontainers.image.url="https://github.com/ChrisHansenTech/SubSyncForPlex"
+LABEL org.opencontainers.image.source="https://github.com/ChrisHansenTech/SubSyncForPlex"
 LABEL org.opencontainers.image.license="MIT"
 LABEL org.opencontainers.image.vendor="ChrisHansenTech"
 
@@ -28,7 +28,7 @@ RUN mkdir config && chmod 777 config
 # Install requirements and build
 RUN pip install .
 
-WORKDIR /app/plexsubsync
+WORKDIR /app/subsyncforplex
 
 COPY ./src .
 

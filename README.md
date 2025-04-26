@@ -1,6 +1,6 @@
-# PlexSubSync
+# SubSyncForPlex
 
-PlexSubSync is a lightweight Python service that receives webhook requests containing Plex media IDs, then uses the Plex API to locate the corresponding media file and subtitle file, and finally syncs the subtitle using [`subsync`](https://github.com/sc0ty/subsync).
+SubSyncForPlex is a lightweight Python service that receives webhook requests containing Plex media IDs, then uses the Plex API to locate the corresponding media file and subtitle file, and finally syncs the subtitle using [`subsync`](https://github.com/sc0ty/subsync).
 
 This service is designed to work standalone or as part of a larger automation system such as Home Assistant.
 
@@ -23,8 +23,8 @@ This service is designed to work standalone or as part of a larger automation sy
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/ChrisHansenTech/PlexSubSync.git
-cd PlexSubSync
+git clone https://github.com/ChrisHansenTech/SubSyncForPlex.git
+cd SubSyncForPlex
 ```
 
 2. Install dependencies:
@@ -52,27 +52,27 @@ Set the following environment variables or configure them in a `.env` file:
 | `DEFAULT_AUDIO_LANG`         | (Optional) Default ISO-639-1 audio language code if not provided (default: "en") |
 | `DEFAULT_SUB_LANG`           | (Optional) Default ISO-639-1 subtitle language code if not provided (default: "en") |
 
-By default, the service expects your Plex media library to be mounted at `/media`. If your files are located elsewhere, update `PLEX_LIBRARY_DIR` in `plex_subsync/config.py`.
+By default, the service expects your Plex media library to be mounted at `/media`. If your files are located elsewhere, update `PLEX_LIBRARY_DIR` in `subsync_plex/config.py`.
  
 ## Docker
 
-The PlexSubSync Docker image is available on GitHub Container Registry:
+The SubSyncForPlex Docker image is available on GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/ChrisHansenTech/PlexSubSync:latest
+docker pull ghcr.io/ChrisHansenTech/SubSyncForPlex:latest
 ```
 
 Or build the image locally:
 
 ```bash
-docker build -t plexsubsync .
+docker build -t SubSyncForPlex .
 ```
 
 Run the container, mounting your Plex media library and setting environment variables:
 
 ```bash
 docker run -d \
-  --name plexsubsync \
+  --name SubSyncForPlex \
   -p 8000:8000 \
   -v /path/to/media:/media \
   -e PLEX_TOKEN=<your_plex_token> \
@@ -80,7 +80,7 @@ docker run -d \
   -e DEFAULT_AUDIO_LANG=en \
   -e DEFAULT_SUB_LANG=en \
   -e HOME_ASSISTANT_WEBHOOK_URL=<optional_webhook_url> \
-  ghcr.io/ChrisHansenTech/PlexSubSync:latest
+  ghcr.io/chrishansentech/subsyncforplex:latest
 ```
 
 Replace `/path/to/media` with the path to your Plex media library.
@@ -105,11 +105,11 @@ Content-Type: application/json
 }
 ```
 
-The `media_id` corresponds to the Plex metadata ID of the media you want to sync. The optional `entity_id` is the Home Assistant entity ID and will be included in any notifications sent to your webhook. Audio and subtitle language codes are optional; if omitted, defaults are taken from the `DEFAULT_AUDIO_LANG` and `DEFAULT_SUB_LANG` environment variables (fallback: "en"). These codes help PlexSubSync match the correct audio track and subtitle file.
+The `media_id` corresponds to the Plex metadata ID of the media you want to sync. The optional `entity_id` is the Home Assistant entity ID and will be included in any notifications sent to your webhook. Audio and subtitle language codes are optional; if omitted, defaults are taken from the `DEFAULT_AUDIO_LANG` and `DEFAULT_SUB_LANG` environment variables (fallback: "en"). These codes help SubSyncForPlex match the correct audio track and subtitle file.
 
 ## Home Assistant Webhook Notification Payload
 
-If `HOME_ASSISTANT_WEBHOOK_URL` is set, PlexSubSync will send HTTP POST requests to this URL with JSON payloads indicating the sync status:
+If `HOME_ASSISTANT_WEBHOOK_URL` is set, SubSyncForPlex will send HTTP POST requests to this URL with JSON payloads indicating the sync status:
 
 ```json
 {
@@ -151,8 +151,8 @@ Example failure notification:
 ## Example Workflow
 
 1. Use a Home Assistant script to send a REST command with the media ID and the entity playing the media.
-2. Triggers a webhook to `PlexSubSync`.
-3. `PlexSubSync` locates the media file and matches the appropriate subtitle file (e.g., based on language or filename) before calling `subsync` to synchronize timing.
+2. Triggers a webhook to `SubSyncForPlex`.
+3. `SubSyncForPlex` locates the media file and matches the appropriate subtitle file (e.g., based on language or filename) before calling `subsync` to synchronize timing.
 4. Sends a status update to Home Assistant when the process is complete.
 5. Home Assistant sends a push notification to your phone or restarts the media player to reload the updated subtitles.
 
@@ -170,7 +170,7 @@ Logs will display information about the sync process, requests, and any errors e
 
 ## Subtitle Matching
 
-PlexSubSync looks for subtitle files in the same folder as the video file. It supports flexible extensions like:
+SubSyncForPlex looks for subtitle files in the same folder as the video file. It supports flexible extensions like:
 
 - `.en.srt`
 - `.eng.srt`

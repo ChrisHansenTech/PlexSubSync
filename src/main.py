@@ -1,7 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional
-from plex_subsync.subsync_service import process_subsync
+from subsync_plex.subsync_service import process_subsync
 
 app = FastAPI()
 
