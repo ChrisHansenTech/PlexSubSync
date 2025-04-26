@@ -30,7 +30,7 @@ RUN pip install .
 
 WORKDIR /app/plexsubsync
 
-copy ./src .
+COPY ./src .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
