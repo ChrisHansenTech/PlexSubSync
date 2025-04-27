@@ -5,8 +5,11 @@ PLEX_URL = os.getenv("PLEX_URL")
 PLEX_TOKEN = os.getenv("PLEX_TOKEN")
 HOME_ASSISTANT_WEBHOOK_URL = os.getenv("HOME_ASSISTANT_WEBHOOK_URL")
 
-# Local library directory mount point
-PLEX_LIBRARY_DIR = "/media"
+# Local library directory mount point (container mount). Can be overridden via environment variable.
+PLEX_LIBRARY_DIR = os.getenv("PLEX_LIBRARY_DIR", "/media")
+# Prefix of Plex API returned file paths to strip when mapping to container path.
+# Example: "\\server\share\plex\movies" or "/mnt/plexdrive/movies".
+PLEX_API_PATH_PREFIX = os.getenv("PLEX_API_PATH_PREFIX", "")
 
 # Notification message templates
 NOTIFICATION_MESSAGE_TEMPLATE = "SubSync finished for: {}"

@@ -16,11 +16,25 @@ def process_subsync(data) -> None:
     # determine language codes (request overrides environment variable, fallback to 'en')
     audio_lang = data.audio_lang or DEFAULT_AUDIO_LANG
     sub_lang = data.sub_lang or DEFAULT_SUB_LANG
-    video_file = get_plex_file_path(data.media_id)
-    if not video_file:
+    # Retrieve raw file path from Plex API
+    video_file_raw = get_plex_file_path(data.media_id)
+    if not video_file_raw:
         print("Error: Unable to fetch file path from Plex.", flush=True)
         return
-    video_file = video_file.lstrip("/")
+    # Map Plex API path to container path by stripping source prefix and joining with local mount
+    # Normalize separators to '/'
+    video_path_normalized = video_file_raw.replace("\\", "/")
+    if PLEX_API_PATH_PREFIX:
+        # Normalize prefix
+        prefix_norm = PLEX_API_PATH_PREFIX.replace("\\", "/").rstrip("/") + "/"
+        if video_path_normalized.startswith(prefix_norm):
+            relative_path = video_path_normalized[len(prefix_norm):]
+        else:
+            relative_path = video_path_normalized.lstrip("/")
+    else:
+        relative_path = video_path_normalized.lstrip("/")
+    # Use relative_path for local operations
+    video_file = relative_path
     # Retrieve media title for notifications
     title = get_plex_media_title(data.media_id)
     if not title:
