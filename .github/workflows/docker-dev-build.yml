@@ -33,5 +33,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/chrishansentech/plexsubsync:dev
-            ghcr.io/chrishansentech/plexsubsync:dev-${{ env.SHORT_SHA }}
+            ghcr.io/chrishansentech/subsyncforplex:dev
+            ghcr.io/chrishansentech/subsyncforplex:dev-${{ env.SHORT_SHA }}
