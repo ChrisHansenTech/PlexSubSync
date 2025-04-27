@@ -51,8 +51,10 @@ Set the following environment variables or configure them in a `.env` file:
 | `HOME_ASSISTANT_WEBHOOK_URL` | (Optional) Home Assistant webhook URL to notify status             |
 | `DEFAULT_AUDIO_LANG`         | (Optional) Default ISO-639-1 audio language code if not provided (default: "en") |
 | `DEFAULT_SUB_LANG`           | (Optional) Default ISO-639-1 subtitle language code if not provided (default: "en") |
+| `PLEX_LIBRARY_DIR`           | (Optional) Local mount path for Plex media library (inside container). Default: `/media`. |
+| `PLEX_API_PATH_PREFIX`       | (Optional) Prefix of file paths returned by the Plex API to strip when mapping to container. Example: `\\server\\share\\plex\\movies` or `/mnt/plexdrive/movies`. |
 
-By default, the service expects your Plex media library to be mounted at `/media`. If your files are located elsewhere, update `PLEX_LIBRARY_DIR` in `subsync_plex/config.py`.
+By default, the service expects your Plex media library to be mounted at `/media`. You can override this by setting the `PLEX_LIBRARY_DIR` environment variable. If your Plex API returns file paths with a prefix that differs from your container mount (e.g., a Windows UNC share path), you can strip that prefix via the `PLEX_API_PATH_PREFIX` environment variable.
  
 ## Docker
 
