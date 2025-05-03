@@ -61,20 +61,20 @@ By default, the service expects your Plex media library to be mounted at `/media
 The SubSyncForPlex Docker image is available on GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/ChrisHansenTech/SubSyncForPlex:latest
+docker pull ghcr.io/chrishansentech/subsyncforplex:latest
 ```
 
 Or build the image locally:
 
 ```bash
-docker build -t SubSyncForPlex .
+docker build -t subsyncforplex .
 ```
 
 Run the container, mounting your Plex media library and setting environment variables:
 
 ```bash
 docker run -d \
-  --name SubSyncForPlex \
+  --name subsyncforplex \
   -p 8000:8000 \
   -v /path/to/media:/media \
   -e PLEX_TOKEN=<your_plex_token> \

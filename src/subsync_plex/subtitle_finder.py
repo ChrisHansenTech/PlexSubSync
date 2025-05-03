@@ -2,7 +2,6 @@
 Functions to locate and select subtitle files matching language codes.
 """
 import os
-import glob
 from .config import PLEX_LIBRARY_DIR
 
 def find_matching_srt(video_file: str, sub_lang: str) -> str | None:
@@ -15,9 +14,23 @@ def find_matching_srt(video_file: str, sub_lang: str) -> str | None:
     """
     video_dir = os.path.join(PLEX_LIBRARY_DIR, os.path.dirname(video_file))
     video_name = os.path.splitext(os.path.basename(video_file))[0]
-    pattern = os.path.join(video_dir, f"{video_name}*.srt")
-    print(f"Searching for subtitles in {video_dir} matching '{video_name}*.srt'", flush=True)
-    all_candidates = glob.glob(pattern)
+    # Collect all subtitle files in the same directory whose names start with the video name
+    print(f"Searching for subtitles in {video_dir} for files starting with '{video_name}'", flush=True)
+    try:
+        filenames = os.listdir(video_dir)
+    except (FileNotFoundError, NotADirectoryError):
+        return None
+    # Match files that start with the video name and end with .srt (case-insensitive extension)
+    all_candidates = []
+    for fname in filenames:
+        # check .srt extension
+        if not fname.lower().endswith('.srt'):
+            continue
+        # match prefix exactly (avoids glob pattern issues with special chars)
+        if not fname.startswith(video_name):
+            continue
+        all_candidates.append(os.path.join(video_dir, fname))
+    # exclude any forced subtitle files
     candidates = [c for c in all_candidates if ".forced" not in os.path.basename(c).lower()]
 
     if not candidates:
