@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -27,6 +29,24 @@ jobs:
         id: vars
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
 
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          TAG_NAME=$TAG
+          # Extract annotated tag message (if present)
+          TAG_ANNOTATION=$(git for-each-ref --format='%(contents)' refs/tags/$TAG_NAME)
+          # Collect commit messages since the previous tag
+          COMMIT_NOTES=$(git log $PREV_TAG..HEAD --pretty=format:'* %s')
+          # Build the GitHub release body
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          if [ -n "$TAG_ANNOTATION" ]; then
+            echo "$TAG_ANNOTATION"
+            echo ""
+          fi
+          echo "$COMMIT_NOTES"
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker images to GHCR
         uses: docker/build-push-action@v5
         with:
@@ -41,8 +61,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           name: Release ${{ env.TAG }}
-          body: |
-            Automated release from GitHub Actions.
+          body: ${{ steps.release_notes.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
